@@ -22,14 +22,14 @@
         </div>
       </div>
       <el-dropdown>
-  <span class="el-dropdown-link">
-    <i class="el-icon-arrow-down el-icon--right"></i>
-  </span>
-  <el-dropdown-menu slot="dropdown">
-    <el-dropdown-item>个人中心</el-dropdown-item>
-    <el-dropdown-item>退出</el-dropdown-item>
-  </el-dropdown-menu>
-</el-dropdown>
+        <span class="el-dropdown-link">
+          <i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>个人中心</el-dropdown-item>
+          <el-dropdown-item>退出</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </el-row>
   </div>
 </template>
@@ -68,12 +68,19 @@ export default {};
       padding: 0 20px;
       height: 60px;
       line-height: 60px;
+
+      &:hover,
+      &:focus,
+      &:active {
+        border-bottom: 5px #409eff solid;
+        color: #409eff;
+      }
     }
   }
   .user {
     display: flex;
-    .msg{
-      padding:0 10px;
+    .msg {
+      padding: 0 10px;
     }
   }
 }
