@@ -6,82 +6,98 @@
           <img src="http://157.122.54.189:9093/images/logo.jpg" alt />
         </nuxt-link>
       </div>
-      <div class="nav">
+      <div class="navs">
         <nuxt-link to="/">首页</nuxt-link>
         <nuxt-link to="/post">旅游攻略</nuxt-link>
         <nuxt-link to="/hotel">酒店</nuxt-link>
         <nuxt-link to="/air">国内机票</nuxt-link>
       </div>
-      <div class="user">
-        <div class="msg">
-          <i class="el-icon-bell"></i>
-          <span>消息</span>
-        </div>
-        <div>
-          <nuxt-link to="/user/login">登录/注册</nuxt-link>
-        </div>
+      <!-- 右边的登陆注册 -->
+      <div v-if="!$store.state.user.userInfo.token">
+        <nuxt-link to="/user/login">登录/注册</nuxt-link>
       </div>
-      <el-dropdown>
+      <el-dropdown v-else>
         <span class="el-dropdown-link">
-          <i class="el-icon-arrow-down el-icon--right"></i>
+          <img
+            :src="`${$axios.defaults.baseURL}${$store.state.user.userInfo.user.defaultAvatar}`"
+            alt
+          />
+          {{$store.state.user.userInfo.user.nickname}}
+          <i
+            class="el-icon-arrow-down el-icon--right"
+          ></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>个人中心</el-dropdown-item>
-          <el-dropdown-item>退出</el-dropdown-item>
+          <el-dropdown-item @click="handleLogout">
+            <div @click="handleLogout">退出</div>
+          </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </el-row>
   </div>
 </template>
-
 <script>
-export default {};
+export default {
+  methods: {
+    handleLogout() {
+      this.$store.commit("user/setUserInfo", {
+        token: "",
+        user: {}
+      });
+      this.$message("退出成功");
+    }
+  }
+};
 </script>
-
 <style lang='less' scoped>
 .header {
   height: 60px;
   line-height: 60px;
   border-bottom: 1px #ddd solid;
   box-shadow: 0 3px 0 #f5f5f5;
-  .main {
-    width: 1000px;
-    margin: 0 auto;
-  }
+  // .main {
+  //   height: 60px;
+  //   width: 1000px;
+  //   margin: 0 auto;
+  // }
   /deep/.el-row {
     height: 60px;
   }
-  .logo {
-    height: 60px;
-    line-height: 60px;
-    img {
-      width: 156px;
-      height: 60px;
+  .nuxt-link-exact-active {
+    background: #409eff;
+    color: #fff;
+    &:hover {
+      color: #fff;
     }
   }
-  .nav {
-    display: flex;
-    flex: 1;
-    a {
-      display: block;
-      box-sizing: border-box;
-      padding: 0 20px;
-      height: 60px;
-      line-height: 60px;
+}
+.logo {
+  width: 156px;
+  padding-top: 8px;
 
-      &:hover,
-      &:focus,
-      &:active {
-        border-bottom: 5px #409eff solid;
-        color: #409eff;
-      }
+  img {
+    display: block;
+    width: 100%;
+  }
+}
+.navs {
+  display: flex;
+  padding: 0 20px;
+  flex: 1;
+  a {
+    display: block;
+    box-sizing: border-box;
+    padding: 0 20px;
+    &:hover {
+      border-bottom: 5px #409eff solid;
+      color: #409eff;
     }
   }
-  .user {
-    display: flex;
-    .msg {
-      padding: 0 10px;
-    }
-  }
+}
+.el-dropdown-link img {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
 }
 </style>
