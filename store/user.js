@@ -45,5 +45,14 @@ export const actions={
             const {data} = res
             store.commit('setUserInfo',data)
         })
+    },
+    getCityList(store,data){
+        return  this.$axios({
+            url:'/airs/city',
+            method:'get',
+            params:{
+                name:data
+            }
+        })
     }
 }
