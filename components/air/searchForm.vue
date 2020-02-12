@@ -86,7 +86,7 @@ export default {
     queryDepartSearch(value, cb) {
       //如果输入框没有值就直接返回
       if (!value) {
-        return;
+        return cb([]);
       }
       //根据value请求城市名称
       //   this.$axios({
@@ -106,12 +106,7 @@ export default {
       //     this.departData = newData;
       //     cb(newData);
       //   });
-      this.$store.dispatch("user/getCityList", value).then(res => {
-        const { data } = res.data;
-        const newData = data.map(v => {
-          v.value = v.name.replace("市", "");
-          return v;
-        });
+      this.$store.dispatch("user/getCityList", value).then(newData => {
         this.destCityData = newData;
         cb(newData);
       });
@@ -134,7 +129,7 @@ destCityBlur(){
     // value 是选中的值，cb是回调函数，接收要展示的列表
     queryDestSearch(value, cb) {
       if (!value) {
-        return;
+        return cb([]);
       }
       //根据value请求城市名称
       this.$store.dispatch("user/getCityList", value).then(res => {

@@ -53,6 +53,13 @@ export const actions={
             params:{
                 name:data
             }
+        }).then(res=>{
+            const { data } = res.data;
+        const newData = data.map(v => {
+          v.value = v.name.replace("市", "");
+          return v;
+          })
+          return newData
         })
     }
 }
