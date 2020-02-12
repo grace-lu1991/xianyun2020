@@ -107,24 +107,24 @@ export default {
       //     cb(newData);
       //   });
       this.$store.dispatch("user/getCityList", value).then(newData => {
-        this.destCityData = newData;
+        this.departData = newData;
         cb(newData);
       });
     },
     ////出发城市获取焦点，直接获取第一个，不然得不到城市代码
     departCityBlur() {
-        if(this.departData === 0){
-            this.form.departCity = this.departData[0].value
-              this.form.departCode = this.departData[0].sort
-        }
+      if (this.departData === 0) {
+        this.form.departCity = this.departData[0].value;
+        this.form.departCode = this.departData[0].sort;
+      }
     },
-//目标城市失去焦点
-destCityBlur(){
-      if(this.departData === 0){
-            this.form.destCity = this.destCityData[0].value
-            this.form.destCode = this.destCityData[0].sort
-        }
-},
+    //目标城市失去焦点
+    destCityBlur() {
+      if (this.departData === 0) {
+        this.form.destCity = this.destCityData[0].value;
+        this.form.destCode = this.destCityData[0].sort;
+      }
+    },
     // 目标城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
     queryDestSearch(value, cb) {
@@ -132,14 +132,8 @@ destCityBlur(){
         return cb([]);
       }
       //根据value请求城市名称
-      this.$store.dispatch("user/getCityList", value).then(res => {
-        const { data } = res.data;
-        const newData = data.map(v => {
-          v.value = v.name.replace("市", "");
-          return v;
-        });
-        this.departData = newData;
-        // console.log(this.departData)
+      this.$store.dispatch("user/getCityList", value).then(newData => {
+        this.destCityData = newData;
         cb(newData);
       });
     },
@@ -173,10 +167,10 @@ destCityBlur(){
 
     // 提交表单是触发
     handleSubmit() {
-        this.$router.push({
-            path:'/air/flights',
-            query:this.form
-        })
+      this.$router.push({
+        path: "/air/flights",
+        query: this.form
+      });
     }
   }
 };
