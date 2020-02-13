@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <el-carousel :interval="5000" arrow="always" height="750px">
+    <el-carousel :interval="5000" height="750px">
       <el-carousel-item v-for="(item,index) in banner" :key="index" class="bannners">
         <div
           class="banner_img"
@@ -58,14 +58,14 @@ export default {
 };
 </script>
 
-<style lang='less' scoped>
-/deep/.el-carousel__item {
+<style lang='less'>
+/deep/.el-carousel__item{
   height: 750px;
 }
-.bannners {
+.bannners{
   height: 750px;
 }
-.banner_img {
+.banner_img{
   width: 100%;
   height: 100%;
 }

@@ -9,7 +9,8 @@
         <!-- 航班头部布局 -->
         <FlightsListHeader></FlightsListHeader>
         <!-- 航班信息 -->
-        <FlightsItem v-for="(item,index) in flightsData.flights" :key="index" :data="item"></FlightsItem>
+        <FlightsItem v-for="(item,index) in getPageChangeData" :key="index" :data="item"></FlightsItem>
+        <el-row type="flex" justify="center" style="margin-top:10px;">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -17,8 +18,9 @@
           :page-sizes="[5, 10, 15, 20]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
+          :total="total"  
         ></el-pagination>
+        </el-row>
       </div>
 
       <!-- 侧边栏 -->
@@ -45,16 +47,6 @@ export default {
       total: 0
     };
   },
-  mounted() {
-    this.$axios({
-      url: "/airs",
-      params: this.$route.query
-    }).then(res => {
-      console.log(res);
-      this.flightsData = res.data;
-      this.total = this.flightsData.total;
-    });
-  },
   computed: {
     getPageChangeData() {
       if (!this.flightsData.flights) {
@@ -64,8 +56,19 @@ export default {
         (this.pageIndex - 1) * this.pageSize,
         this.pageIndex * this.pageSize
       );
+      console.log(arr);
       return arr;
     }
+  },
+  mounted() {
+    this.$axios({
+      url: "/airs",
+      params: this.$route.query
+    }).then(res => {
+      //   console.log(res);
+      this.flightsData = res.data;
+      this.total = this.flightsData.total;
+    });
   },
   methods: {
     //当前页展示条数变化
@@ -75,6 +78,7 @@ export default {
     },
     //当前页发生变化
     handleCurrentChange(val) {
+      console.log(val);
       this.pageIndex = val;
     }
   }
