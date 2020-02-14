@@ -95,7 +95,7 @@ export default {
     },
     getData(newData){
       this.flightsData.flights = newData
-      this.flightsData.total = newData.length
+      this.total = newData.length
     }
   }
 };
