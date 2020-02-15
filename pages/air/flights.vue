@@ -26,6 +26,7 @@
       <!-- 侧边栏 -->
       <div class="aside">
         <!-- 侧边栏组件 -->
+        <FlightsAside></FlightsAside>
       </div>
     </el-row>
   </section>
@@ -35,11 +36,13 @@
 import FlightsListHeader from "@/components/air/flightsListHead";
 import FlightsItem from "@/components/air/flightsItem";
 import FlightsFilters from "@/components/air/flightsFilters";
+import FlightsAside from '@/components/air/flightsAside'
 export default {
   components: {
     FlightsListHeader,
     FlightsItem,
-    FlightsFilters
+    FlightsFilters,
+    FlightsAside,
   },
   data() {
     return {
@@ -58,6 +61,13 @@ export default {
       total: 0
     };
   },
+  //watch可以监听任何实例下单个属性变化
+  watch:{
+    $route(){
+      this.pageIndex = 1
+     this.getFlightsData()
+    }
+  },
   computed: {
     getPageChangeData() {
       if (!this.flightsData.flights) {
@@ -72,7 +82,12 @@ export default {
     }
   },
   mounted() {
-    this.$axios({
+    this.getFlightsData()
+  },
+  methods: {
+    //封装请求城市列表数据
+    getFlightsData(){
+      this.$axios({
       url: "/airs",
       params: this.$route.query
     }).then(res => {
@@ -80,9 +95,8 @@ export default {
       this.flightsData = res.data;
       this.cacheFlightsData = {...res.data}
       this.total = this.flightsData.total;
-    });
-  },
-  methods: {
+    })
+    },
     //当前页展示条数变化
     handleSizeChange(val) {
       console.log(val);

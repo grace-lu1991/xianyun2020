@@ -75,7 +75,7 @@ export default {
     //过滤出不符合条件，用空字符渲染，监听数据得变化
     filter() {
       const newData = this.data.flights.filter(v => {
-        //假设所有得调价是满足得
+        //假设所有得条件是满足得
         let vaild = true;
         if (this.airport && v.org_airport_name !== this.airport) {
           vaild = false;

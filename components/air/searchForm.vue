@@ -113,17 +113,20 @@ export default {
     },
     ////出发城市获取焦点，直接获取第一个，不然得不到城市代码
     departCityBlur() {
-      if (this.departData === 0) {
+      if (this.departData.length === 0) {
+       return }
         this.form.departCity = this.departData[0].value;
         this.form.departCode = this.departData[0].sort;
-      }
+        console.log(this.form.departCode)
+      
     },
     //目标城市失去焦点
     destCityBlur() {
-      if (this.departData === 0) {
+      if (this.destCityData.length === 0) {
+        return;}
         this.form.destCity = this.destCityData[0].value;
         this.form.destCode = this.destCityData[0].sort;
-      }
+      
     },
     // 目标城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
@@ -186,6 +189,8 @@ export default {
         path: "/air/flights",
         query: this.form
       });
+      // console.log(this.form)
+      this.$store.commit('air/historyAirData',this.form)
     }
   }
 };
