@@ -33,7 +33,9 @@ export default {
                   this.$store.dispatch('user/login',this.form).then(res=>{
                     //   console.log(res)
                       this.$message('登陆成功')
-                      this.$router.push('/')
+                    // 跳转到首页, 如果使用push跳转，路由内存里面会多一条记录，
+                    //如果是replace替换当前的路由
+                      this.$router.replace(this.$route.query.returnUrl || "/")
                   })
               }
           })

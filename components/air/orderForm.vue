@@ -63,6 +63,7 @@
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
       </div>
     </div>
+    <span>{{allPrice}}</span>
   </div>
 </template>
 
@@ -80,8 +81,17 @@ export default {
         seat_xid: this.$route.query.seat_xid,
         id: this.$route.query.id
       },
-      airData: {}
+      airData: {
+         
+      }
     };
+  },
+  //计算总价
+  //computed可以监听组件下的所有实例属性
+  computed: {
+    allPrice(){
+
+    }
   },
   //需要获取机票详细信息，结算订单
   mounted() {
@@ -92,6 +102,7 @@ export default {
     }).then(res => {
       console.log(res);
       this.airData = res.data;
+      this.$store.commit('air/getOrderInfo', this.airData)
     });
   },
   methods: {
@@ -105,7 +116,15 @@ export default {
       this.form.user.splice(index, 1);
     },
     //处理保险数据
-    handleInsurance(id) {},
+    handleInsurance(id) {
+      let index = this.form.insurances.indexOf(id)
+      if(index>-1){
+        //说明保险已勾选，再点击就是删除
+        this.form.insurances.splice(index,1)
+      }else{
+         this.form.insurances.push(id)
+      }
+    },
 
     // 发送手机验证码
     handleSendCaptcha() {
@@ -167,7 +186,7 @@ export default {
        const item = rules[v]
       valid = item.validator()
       if(!valid){
-        return
+        this.$message.error(item.errMessage);
       }
       this.$axios({
         url:'/airorders',
