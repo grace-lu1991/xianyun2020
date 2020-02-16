@@ -68,6 +68,12 @@ export default {
      this.getFlightsData()
     }
   },
+  //拦截器监听
+  //  beforeRouteUpdate (to, from, next){
+  //    this.pageIndex = 1
+  //    this.getFlightsData()
+  //    next()
+  //  },
   computed: {
     getPageChangeData() {
       if (!this.flightsData.flights) {
