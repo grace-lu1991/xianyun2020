@@ -45,7 +45,7 @@
       <div class="contact">
         <el-form label-width="60px">
           <el-form-item label="姓名">
-            <el-input  v-model="form.contactName"></el-input>
+            <el-input v-model="form.contactName"></el-input>
           </el-form-item>
 
           <el-form-item label="手机">
@@ -81,16 +81,33 @@ export default {
         seat_xid: this.$route.query.seat_xid,
         id: this.$route.query.id
       },
-      airData: {
-         
-      }
+      airData: {}
     };
   },
   //计算总价
   //computed可以监听组件下的所有实例属性
   computed: {
-    allPrice(){
-
+    allPrice() {
+      if (!this.airData.seat_infos) {
+        return;
+      }
+      let price = 0;
+      //成人票
+      price += this.airData.seat_infos.org_settle_price;
+      //燃油费
+      price += this.airData.airport_tax_audlet;
+      //保险费
+      this.airData.insurances.forEach(v => {
+        const index = this.form.insurances.indexOf(v.id);
+        if (index > -1) {
+          price += v.price;
+        }
+      });
+      //计算人数
+      price *= this.form.user.length
+      //把总价存储到store
+      this.$store.commit('air/getTotalPrice',price)
+      return ''
     }
   },
   //需要获取机票详细信息，结算订单
@@ -102,7 +119,7 @@ export default {
     }).then(res => {
       console.log(res);
       this.airData = res.data;
-      this.$store.commit('air/getOrderInfo', this.airData)
+      this.$store.commit("air/getOrderInfo", this.airData);
     });
   },
   methods: {
@@ -117,12 +134,12 @@ export default {
     },
     //处理保险数据
     handleInsurance(id) {
-      let index = this.form.insurances.indexOf(id)
-      if(index>-1){
+      let index = this.form.insurances.indexOf(id);
+      if (index > -1) {
         //说明保险已勾选，再点击就是删除
-        this.form.insurances.splice(index,1)
-      }else{
-         this.form.insurances.push(id)
+        this.form.insurances.splice(index, 1);
+      } else {
+        this.form.insurances.push(id);
       }
     },
 
@@ -143,66 +160,61 @@ export default {
     handleSubmit() {
       const rules = {
         //验证乘机人
-        user: 
-          {
-            errMessage: "乘机人信息不能为空",
-            validator: () => {
-              let valid = true;
-              this.form.user.forEach(v => {
-                if (!v.username || !v.id) {
-                  valid = false;
-                }
-              });
-              return valid;
-            }
-          },
-        contactName: 
-          {
-            errMessage: "联系人不能为空",
-            validator: () => {
-              return !!this.form.contactName;
-            }
-          },
-         contactPhone: 
-          {
-            errMessage: "手机号码不能为空",
-            validator: () => {
-              return !!this.form.contactPhone;
-            }
-          },
-         captcha: 
-          {
-            errMessage: "验证码不能为空",
-            validator: () => {
-              return !!this.form.captcha;
-            }
-          },
+        user: {
+          errMessage: "乘机人信息不能为空",
+          validator: () => {
+            let valid = true;
+            this.form.user.forEach(v => {
+              if (!v.username || !v.id) {
+                valid = false;
+              }
+            });
+            return valid;
+          }
+        },
+        contactName: {
+          errMessage: "联系人不能为空",
+          validator: () => {
+            return !!this.form.contactName;
+          }
+        },
+        contactPhone: {
+          errMessage: "手机号码不能为空",
+          validator: () => {
+            return !!this.form.contactPhone;
+          }
+        },
+        captcha: {
+          errMessage: "验证码不能为空",
+          validator: () => {
+            return !!this.form.captcha;
+          }
+        }
       };
       //先假设所有验证都通过
       let valid = true;
-     Object.keys(rules).forEach(v=>{
-       //有一个验证不通过就会阻断下面代码的执行
-       if(!valid) return;
-       const item = rules[v]
-      valid = item.validator()
-      if(!valid){
-        this.$message.error(item.errMessage);
-      }
-      this.$axios({
-        url:'/airorders',
-        method:'post',
-        data:this.form,
-        headers:{Authorization:`Bearer ` +this.$store.state.user.userInfo.token}
-      }).then(res=>{
-        console.log(res)
-      })
-       
-     })
-    },
+      Object.keys(rules).forEach(v => {
+        //有一个验证不通过就会阻断下面代码的执行
+        if (!valid) return;
+        const item = rules[v];
+        valid = item.validator();
+        if (!valid) {
+          this.$message.error(item.errMessage);
+        }
+        this.$axios({
+          url: "/airorders",
+          method: "post",
+          data: this.form,
+          headers: {
+            Authorization: `Bearer ` + this.$store.state.user.userInfo.token
+          }
+        }).then(res => {
+          console.log(res);
+        });
+      });
+    }
   }
-  
-}
-  
+};
 </script >
 
 <style lang="less">

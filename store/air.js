@@ -5,7 +5,8 @@ return{
     orderInfo:{
         insurances: [], 
         seat_infos: {}
-    }
+    },
+    totalPrice:'',
 }
 }
 //对state里面的数据进行修改
@@ -17,5 +18,8 @@ export const mutations = {
     },
     getOrderInfo(state,data){
         state.orderInfo = data
+    },
+    getTotalPrice(state,data){
+        state.totalPrice = data
     }
 }
