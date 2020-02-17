@@ -2,7 +2,7 @@
   <div class="main">
     <div class="air-column">
       <h2>剩机人</h2>
-      <el-form class="member-info" v-for="(item,index) in form.user" :key="index">
+      <el-form class="member-info" v-for="(item,index) in form.users" :key="index">
         <div class="member-info-item">
           <el-form-item label="乘机人类型">
             <el-input placeholder="姓名" class="input-with-select" v-model="item.username">
@@ -72,14 +72,14 @@ export default {
   data() {
     return {
       form: {
-        user: [{ username: "", id: "" }],
+        users: [{ username: "", id: "" }],
         insurances: [],
         contactName: "",
         contactPhone: "",
         captcha: "",
         invoice: false,
         seat_xid: this.$route.query.seat_xid,
-        id: this.$route.query.id
+        air: this.$route.query.id
       },
       airData: {}
     };
@@ -104,10 +104,10 @@ export default {
         }
       });
       //计算人数
-      price *= this.form.user.length
+      price *= this.form.users.length;
       //把总价存储到store
-      this.$store.commit('air/getTotalPrice',price)
-      return ''
+      this.$store.commit("air/getTotalPrice", price);
+      return "";
     }
   },
   //需要获取机票详细信息，结算订单
@@ -125,12 +125,12 @@ export default {
   methods: {
     // 添加乘机人
     handleAddUsers() {
-      this.form.user.push({ username: "", id: "" });
+      this.form.users.push({ username: "", id: "" });
     },
 
     // 移除乘机人
     handleDeleteUser(index) {
-      this.form.user.splice(index, 1);
+      this.form.users.splice(index, 1);
     },
     //处理保险数据
     handleInsurance(id) {
@@ -160,11 +160,11 @@ export default {
     handleSubmit() {
       const rules = {
         //验证乘机人
-        user: {
+        users: {
           errMessage: "乘机人信息不能为空",
           validator: () => {
             let valid = true;
-            this.form.user.forEach(v => {
+            this.form.users.forEach(v => {
               if (!v.username || !v.id) {
                 valid = false;
               }
@@ -201,16 +201,24 @@ export default {
         if (!valid) {
           this.$message.error(item.errMessage);
         }
-        this.$axios({
-          url: "/airorders",
-          method: "post",
-          data: this.form,
-          headers: {
-            Authorization: `Bearer ` + this.$store.state.user.userInfo.token
-          }
-        }).then(res => {
-          console.log(res);
-        });
+      });
+      this.$axios({
+        url: "/airorders",
+        method: "post",
+        data: this.form,
+        headers: {
+          Authorization: `Bearer ` + this.$store.state.user.userInfo.token
+        }
+      }).then(res => {
+        console.log(res);
+        this.$message.success("订单提交成功");
+        const {id} = res.data.data
+        // console.log(id)
+        //跳转到付款页
+        this.$router.push({
+          path:'/air/pay',
+          query:{id}
+        })
       });
     }
   }

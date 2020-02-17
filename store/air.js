@@ -14,7 +14,10 @@ export const mutations = {
     historyAirData(state,data){
         //  state.historyData.push(data)
         state.historyData.unshift(data)
-        state.historyData.length = 5
+        if(state.historyData.length > 5){ 
+            state.historyData.length = 5
+        }
+       
     },
     getOrderInfo(state,data){
         state.orderInfo = data
